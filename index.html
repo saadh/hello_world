@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Syntax Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .char-counter {
+            font-size: 12px;
+            color: #888;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .char-counter.warning {
+            color: #ff6b6b;
+        }
+
+        .yalla-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0;
+        }
+
+        .yalla-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .yalla-btn:active {
+            transform: translateY(0);
+        }
+
+        .yalla-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .output {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .output.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .output h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            text-align: left;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #667eea;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Print Syntax Generator</h1>
+        
+        <div class="input-group">
+            <label for="textInput">Enter your text (up to 50 characters):</label>
+            <input type="text" id="textInput" placeholder="Type your message here..." maxlength="50">
+            <div class="char-counter" id="charCounter">0/50 characters</div>
+        </div>
+
+        <div class="input-group">
+            <label for="languageSelect">Select Programming Language:</label>
+            <select id="languageSelect">
+                <option value="">Choose a language...</option>
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="c">C</option>
+                <option value="csharp">C#</option>
+                <option value="php">PHP</option>
+                <option value="ruby">Ruby</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="swift">Swift</option>
+                <option value="kotlin">Kotlin</option>
+            </select>
+        </div>
+
+        <button class="yalla-btn" id="yallaBtn" disabled>Yalla</button>
+
+        <div class="output" id="output">
+            <h3 id="outputTitle"></h3>
+            <div class="code-block" id="codeBlock">
+                <button class="copy-btn" id="copyBtn">Copy</button>
+                <pre id="codeContent"></pre>
+            </div>
+        </div>
+
+        <div class="footer">
+            Built with ❤️ for developers
+        </div>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('textInput');
+        const languageSelect = document.getElementById('languageSelect');
+        const yallaBtn = document.getElementById('yallaBtn');
+        const output = document.getElementById('output');
+        const outputTitle = document.getElementById('outputTitle');
+        const codeContent = document.getElementById('codeContent');
+        const copyBtn = document.getElementById('copyBtn');
+        const charCounter = document.getElementById('charCounter');
+
+        // Language syntax templates
+        const syntaxTemplates = {
+            python: (text) => `print("${text}")`,
+            javascript: (text) => `console.log("${text}");`,
+            java: (text) => `System.out.println("${text}");`,
+            cpp: (text) => `std::cout << "${text}" << std::endl;`,
+            c: (text) => `printf("${text}\\n");`,
+            csharp: (text) => `Console.WriteLine("${text}");`,
+            php: (text) => `echo "${text}";`,
+            ruby: (text) => `puts "${text}"`,
+            go: (text) => `fmt.Println("${text}")`,
+            rust: (text) => `println!("${text}");`,
+            swift: (text) => `print("${text}")`,
+            kotlin: (text) => `println("${text}")`
+        };
+
+        const languageNames = {
+            python: 'Python',
+            javascript: 'JavaScript',
+            java: 'Java',
+            cpp: 'C++',
+            c: 'C',
+            csharp: 'C#',
+            php: 'PHP',
+            ruby: 'Ruby',
+            go: 'Go',
+            rust: 'Rust',
+            swift: 'Swift',
+            kotlin: 'Kotlin'
+        };
+
+        // Character counter
+        textInput.addEventListener('input', function() {
+            const length = this.value.length;
+            charCounter.textContent = `${length}/50 characters`;
+            
+            if (length > 40) {
+                charCounter.classList.add('warning');
+            } else {
+                charCounter.classList.remove('warning');
+            }
+            
+            updateButtonState();
+        });
+
+        // Language selection
+        languageSelect.addEventListener('change', updateButtonState);
+
+        // Update button state
+        function updateButtonState() {
+            const hasText = textInput.value.trim().length > 0;
+            const hasLanguage = languageSelect.value !== '';
+            yallaBtn.disabled = !(hasText && hasLanguage);
+        }
+
+        // Generate syntax
+        yallaBtn.addEventListener('click', function() {
+            const text = textInput.value.trim();
+            const language = languageSelect.value;
+            
+            if (text && language) {
+                const syntaxFunction = syntaxTemplates[language];
+                const generatedCode = syntaxFunction(text);
+                
+                outputTitle.textContent = `${languageNames[language]} Print Statement:`;
+                codeContent.textContent = generatedCode;
+                
+                output.classList.add('show');
+                output.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // Copy to clipboard
+        copyBtn.addEventListener('click', function() {
+            const codeText = codeContent.textContent;
+            navigator.clipboard.writeText(codeText).then(() => {
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy';
+                }, 2000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = codeText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy';
+                }, 2000);
+            });
+        });
+
+        // Enter key support
+        textInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !yallaBtn.disabled) {
+                yallaBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>

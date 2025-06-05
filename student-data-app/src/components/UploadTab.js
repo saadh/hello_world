@@ -122,7 +122,6 @@ const UploadTab = () => {
     };
 
     const handleUpload = async () => {
-        console.log('Upload button clicked'); // Add this line for debugging
         if (!file) {
             setUploadError('Please select a file first.');
             return;

@@ -97,8 +97,6 @@ const validateAndCleanStudentData = (data) => {
 
 // API endpoint for file upload and data storage
 app.post('/upload', upload.single('file'), (req, res) => {
-    console.log('Upload endpoint hit'); // Add this line for debugging
-    console.log('Request file:', req.file); // Log the uploaded file details
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
@@ -109,8 +107,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = xlsx.utils.sheet_to_json(worksheet);
-
-        console.log('Parsed JSON data:', jsonData); // Log the parsed JSON data
 
         const studentsToInsert = [];
         const validationErrors = [];
